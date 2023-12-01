@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.jtspringproject.JtSpringProject.services.cartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -58,32 +59,39 @@ public class UserController{
 	}
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public ModelAndView userlogin( @RequestParam("username") String username, @RequestParam("password") String pass,Model model,HttpServletResponse res) {
-		
-		System.out.println(pass);
-		User u = this.userService.checkLogin(username, pass);
-		System.out.println(u.getUsername());
-		if(u.getUsername().equals(username)) {	
-			
-			res.addCookie(new Cookie("username", u.getUsername()));
-			ModelAndView mView  = new ModelAndView("index");	
-			mView.addObject("user", u);
-			List<Product> products = this.productService.getProducts();
 
-			if (products.isEmpty()) {
-				mView.addObject("msg", "No products are available");
-			} else {
-				mView.addObject("products", products);
+		User u = this.userService.checkLogin(username, pass);
+
+		if(u != null) {
+//			System.out.println(u.getRole());
+			if(u.getRole().contains("ROLE_NORMAL")) {
+				res.addCookie(new Cookie("username", u.getUsername()));
+				ModelAndView mView = new ModelAndView("index");
+				mView.addObject("user", u);
+				List<Product> products = this.productService.getProducts();
+
+				if (products.isEmpty()) {
+					mView.addObject("msg", "No products are available");
+				} else {
+					mView.addObject("products", products);
+				}
+				return mView;
 			}
-			return mView;
+			else{
+				ModelAndView mv = new ModelAndView("adminHome");
+//				adminlogcheck=1;
+				mv.addObject("admin", u);
+				return mv;
+			}
 
 		}else {
 			ModelAndView mView = new ModelAndView("userLogin");
 			mView.addObject("msg", "Please enter correct email and password");
 			return mView;
 		}
-		
+
 	}
-	
+
 	
 	@GetMapping("/user/products")
 	public ModelAndView getproduct() {
@@ -149,6 +157,12 @@ public class UserController{
 			
 			
 		}
+
+	@GetMapping("profileDisplay")
+	public String profileDisplay(Model model) {
+
+		return "updateProfile";
+	}
 
 
 //	@GetMapping("carts")

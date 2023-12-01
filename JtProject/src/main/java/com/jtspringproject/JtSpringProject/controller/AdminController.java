@@ -228,38 +228,38 @@ public class AdminController {
 	}
 	
 	
-	@GetMapping("profileDisplay")
-	public String profileDisplay(Model model) {
-		String displayusername,displaypassword,displayemail,displayaddress;
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommjava", "root", "sql123");
-			PreparedStatement stmt = con.prepareStatement("SELECT * FROM users WHERE username = ?");
-			stmt.setString(1, usernameforclass);
-			ResultSet rst = stmt.executeQuery(); // Use executeQuery() for SELECT queries
-			
-			if(rst.next())
-			{
-			int userid = rst.getInt(1);
-			displayusername = rst.getString(2);
-			displayemail = rst.getString(3);
-			displaypassword = rst.getString(4);
-			displayaddress = rst.getString(5);
-			model.addAttribute("userid",userid);
-			model.addAttribute("username",displayusername);
-			model.addAttribute("email",displayemail);
-			model.addAttribute("password",displaypassword);
-			model.addAttribute("address",displayaddress);
-			}
-		}
-		catch(Exception e)
-		{
-			System.out.println("Exception:"+e);
-		}
-		System.out.println("Hello");
-		return "updateProfile";
-	}
+//	@GetMapping("profileDisplay")
+//	public String profileDisplay(Model model) {
+//		String displayusername,displaypassword,displayemail,displayaddress;
+//		try
+//		{
+//			Class.forName("com.mysql.jdbc.Driver");
+//			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/ecommjava", "root", "sql123");
+//			PreparedStatement stmt = con.prepareStatement("SELECT * FROM users WHERE username = ?");
+//			stmt.setString(1, usernameforclass);
+//			ResultSet rst = stmt.executeQuery(); // Use executeQuery() for SELECT queries
+//
+//			if(rst.next())
+//			{
+//			int userid = rst.getInt(1);
+//			displayusername = rst.getString(2);
+//			displayemail = rst.getString(3);
+//			displaypassword = rst.getString(4);
+//			displayaddress = rst.getString(5);
+//			model.addAttribute("userid",userid);
+//			model.addAttribute("username",displayusername);
+//			model.addAttribute("email",displayemail);
+//			model.addAttribute("password",displaypassword);
+//			model.addAttribute("address",displayaddress);
+//			}
+//		}
+//		catch(Exception e)
+//		{
+//			System.out.println("Exception:"+e);
+//		}
+//		System.out.println("Hello");
+//		return "updateProfile";
+//	}
 	
 	@RequestMapping(value = "updateuser",method=RequestMethod.POST)
 	public String updateUserProfile(@RequestParam("userid") int userid,@RequestParam("username") String username, @RequestParam("email") String email, @RequestParam("password") String password, @RequestParam("address") String address) 

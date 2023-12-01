@@ -51,12 +51,10 @@ public class userDao {
 			if(password.equals(user.getPassword())) {
 				return user;
 			}else {		
-				return new User();
+				return null;
 			}
 		}catch(Exception e){
-			System.out.println(e.getMessage());
-			User user = new User();
-			return user;
+			return null;
 		}
     	
     }
