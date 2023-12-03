@@ -16,29 +16,19 @@
 <br>
 <div class="container">
     <div class="col-sm-6">
-        <h3 style="margin-top: 10px">User Profile</h3>
+        <h3 style="margin-top: 10px">Update User Profile</h3>
         <br>
-        <form action="updateuser" method="post">
+        <h5 th:if="${msg}" style="color: red">${msg}</h5>
+        <form action="updateProfile" method="post">
             <div class="form-group">
                 <label for="firstName">User Name</label>
                 <input type="hidden" name="userid" value="${userid }">
-                <input type="text" name="username" id="firstName" required placeholder="Your Username*" value="${username }" required class="form-control form-control-lg">
+                <input type="text" name="username" id="firstName" placeholder="New Username" value="${username }" class="form-control form-control-lg">
             </div>
-            <div class="form-group">
-                <label for="email">Email address</label>
-                <input type="email" class="form-control form-control-lg" required minlength="6" placeholder="Email*" value="${email }" required name="email" id="email"
-                       aria-describedby="emailHelp">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with
-                    anyone else.</small>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control form-control-lg" required placeholder="Password*" value="${password }" required name="password"
-                       id="password">
-            </div>
+
             <div class="form-group">
                 <label for="Address">Address</label>
-                <textarea class="form-control form-control-lg" rows="3" placeholder="Enter Your Address" name="address">${address }</textarea>
+                <textarea class="form-control form-control-lg" rows="3" placeholder="New Address" name="address" value="${address}"></textarea>
             </div>
 
             <input type="submit" value="Update Profile" class="btn btn-primary btn-block"><br>

@@ -31,6 +31,8 @@ import com.jtspringproject.JtSpringProject.services.cartService;
 @Controller
 public class UserController {
 
+	private User loggedInUser = null;
+
 	@Autowired
 	private userService userService;
 
@@ -55,14 +57,14 @@ public class UserController {
 
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public ModelAndView userlogin(@RequestParam("username") String username, @RequestParam("password") String pass,
-			Model model, HttpServletResponse res) {
+								  Model model, HttpServletResponse res) {
 
 		User u = this.userService.checkLogin(username, pass);
 
 		if (u != null) {
-			// System.out.println(u.getRole());
 			if (u.getRole().contains("ROLE_NORMAL")) {
 				res.addCookie(new Cookie("username", u.getUsername()));
+				this.loggedInUser = u;
 				ModelAndView mView = new ModelAndView("index");
 				mView.addObject("user", u);
 				List<Product> products = this.productService.getProducts();
@@ -75,7 +77,6 @@ public class UserController {
 				return mView;
 			} else {
 				ModelAndView mv = new ModelAndView("adminHome");
-				// adminlogcheck=1;
 				mv.addObject("admin", u);
 				return mv;
 			}
@@ -106,7 +107,7 @@ public class UserController {
 
 	@RequestMapping(value = "newuserregister", method = RequestMethod.POST)
 	public ModelAndView newUseRegister(@RequestParam("username") String username, @RequestParam("email") String email,
-			@RequestParam("password") String password, @RequestParam("address") String address) {
+									   @RequestParam("password") String password, @RequestParam("address") String address) {
 
 		if (username.isEmpty() || email.isEmpty() || password.isEmpty() || address.isEmpty()) {
 			ModelAndView mView = new ModelAndView("register");
@@ -168,13 +169,54 @@ public class UserController {
 	}
 
 	@GetMapping("profileDisplay")
-	public String profileDisplay(Model model) {
+	public ModelAndView profileDisplay(Model model) {
 
-		return "updateProfile";
+		ModelAndView mv = new ModelAndView("profileView");
+		mv.addObject("user", loggedInUser);
+
+		return mv;
+	}
+
+	@GetMapping("updateProfile")
+	public ModelAndView updateProfile(Model model) {
+
+		ModelAndView mv = new ModelAndView("updateProfile");
+		mv.addObject("user", loggedInUser);
+
+		return mv;
+	}
+
+	@PostMapping("updateProfile")
+	public ModelAndView updateProfilePOST(@RequestParam("username") String username, @RequestParam("address") String address) {
+
+		ModelAndView mv = new ModelAndView("redirect:/profileDisplay");
+
+		if(!username.isEmpty()){
+			if(!this.loggedInUser.getUsername().equals(username)){
+				if(this.userService.usernameExists(username)){
+					mv.addObject("msg", "username already taken");
+				}
+				else{
+					this.userService.changeUsername(username, this.loggedInUser.getId());
+					this.loggedInUser.setUsername(username);
+				}
+			}
+		}
+
+		if(!address.isEmpty()) {
+			if (!this.loggedInUser.getAddress().equals(address)) {
+				this.userService.changeAddress(address, this.loggedInUser.getId());
+				this.loggedInUser.setAddress(address);
+			}
+		}
+
+		mv.addObject("user", loggedInUser);
+		return mv;
 	}
 
 	@RequestMapping(value = { "/", "/logout" })
 	public String returnIndex() {
+		this.loggedInUser = null;
 		return "redirect:/";
 	}
 

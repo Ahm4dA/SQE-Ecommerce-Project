@@ -33,4 +33,12 @@ public class userService {
 	public boolean emailExists(String email) {
 		return this.userDao.emailExists(email);
 	}
+
+	public void changeUsername(String username, int id){
+		this.userDao.changeUsername(username, id);
+	}
+
+	public void changeAddress(String username, int id){
+		this.userDao.changeAddress(username, id);
+	}
 }

@@ -93,4 +93,32 @@ public class userDao {
 
 		return false;
 	}
+
+	@Transactional
+	public void changeUsername(String username, int userID){
+		String hql = "update CUSTOMER set username = :newUN where id = :id";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("newUN", username);
+		query.setParameter("id", userID);
+
+		try {
+			int result = query.executeUpdate();
+		} catch (Exception e) {
+
+		}
+	}
+
+	@Transactional
+	public void changeAddress(String address, int userID){
+		String hql = "update CUSTOMER set address = :newAddress where id = :id";
+		Query query = sessionFactory.getCurrentSession().createQuery(hql);
+		query.setParameter("newAddress", address);
+		query.setParameter("id", userID);
+
+		try {
+			int result = query.executeUpdate();
+		} catch (Exception e) {
+
+		}
+	}
 }
