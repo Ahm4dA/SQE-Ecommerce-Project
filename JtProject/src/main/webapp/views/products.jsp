@@ -60,7 +60,7 @@
 				<th scope="col">Quantity</th>
 				<th scope="col">Price</th>
 				<th scope="col">Weight</th>
-				<th scope="col">Descrption</th>
+				<th scope="col">Description</th>
 				<th scope="col">Delete</th>
 				<th scope="col">Update</th>
 			</tr>
@@ -98,7 +98,7 @@
 					</td>
 
 					<td>
-					<form action="products/delete" method="get">
+					<form action="products/delete" method="post">
 							<input type="hidden" name="id" value="${product.id}">
 							<input type="submit" value="Delete" class="btn btn-danger">
 					</form>

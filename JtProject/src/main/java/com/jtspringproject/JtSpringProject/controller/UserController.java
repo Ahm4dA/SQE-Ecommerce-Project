@@ -287,8 +287,29 @@ public class UserController {
 	@RequestMapping(value = "products/update/{id}",method=RequestMethod.POST)
 	public String updateProduct(@PathVariable("id") int id ,@RequestParam("name") String name,@RequestParam("categoryid") int categoryId ,@RequestParam("price") int price,@RequestParam("weight") int weight, @RequestParam("quantity")int quantity,@RequestParam("description") String description,@RequestParam("productImage") String productImage)
 	{
+		if(description.isEmpty() || productImage.isEmpty()){
+			return "redirect:/admin/products";
+		}
 
-//		this.productService.updateProduct();
+		Category category = this.categoryService.getCategory(categoryId);
+		Product product = new Product();
+		product.setId(categoryId);
+		product.setName(name);
+		product.setCategory(category);
+		product.setDescription(description);
+		product.setPrice(price);
+		product.setImage(productImage);
+		product.setWeight(weight);
+		product.setQuantity(quantity);
+
+		this.productService.updateProduct(id, product);
+		return "redirect:/admin/products";
+	}
+
+	@PostMapping("admin/products/delete")
+	public String removeProduct(@RequestParam("id") int id)
+	{
+		this.productService.deleteProduct(id);
 		return "redirect:/admin/products";
 	}
 

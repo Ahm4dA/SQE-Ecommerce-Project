@@ -37,6 +37,7 @@ public class productDao {
 		return this.sessionFactory.getCurrentSession().get(Product.class, id);
 	}
 
+	@Transactional
 	public Product updateProduct(Product product){
 		this.sessionFactory.getCurrentSession().update(String.valueOf(Product.class),product);
 		return product;
