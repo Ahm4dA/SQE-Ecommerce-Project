@@ -44,27 +44,26 @@
 			</div>
 		</div>
 	</nav><br>
-	<c:forEach var="product" items="products">
 	<div class="jumbotron container border border-info">
 		<h3>Update Existing Product</h3>
 		<form action="/products/update/${product.id}" method="post">
 			<div class="row">
 				<div class="col-sm-5">
-					
+
 					<div class="form-group">
-						<label for="name">Id</label> 
+						<label for="name">Id</label>
 						<input type="number" readonly="readonly" class="form-control border border-success" name="id"  value="${product.id}">
-						
+
 
 					</div>
 					<div class="form-group">
-						<label for="name">Name</label> 
+						<label for="name">Name</label>
 						<input type="text" class="form-control border border-success" required name="name" value="${product.name }" placeholder="Enter name">
 					</div>
-					
+
 					<div class="form-group">
-					
-						<label for="category">Select Category</label> 
+
+						<label for="category">Select Category</label>
 						<select class="form-control border border-success" name="categoryid" readonly>
 							<option selected>Select a Category</option>
                             							<c:forEach var="category" items="${categories}">
@@ -73,25 +72,25 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="price">Price</label> 
+						<label for="price">Price</label>
 						<input type="number" class="form-control border border-success" required name="price" value="${ product.price }" min="1" placeholder="Price">
 					</div>
 					<div class="form-group">
-						<label for="weight">Weight in grams</label> 
+						<label for="weight">Weight in grams</label>
 						<input type="number" class="form-control border border-success" required name="weight" value="${product.weight }" min="1" placeholder="Weight">
 					</div>
 					<div class="form-group">
-						<label for="weight">Available Quantity</label> 
+						<label for="weight">Available Quantity</label>
 						<input type="number" class="form-control border border-success" required name="quantity" value="${ product.quantity }" min="1" placeholder="Quantity">
 					</div>
-					
-					
+
+
 				</div>
-				
+
 				<div class="col-sm-5">
 				<div class="form-group">
 						<label for="description">Product Description</label>
-						<textarea class="form-control border border-success" rows="4" name="product.description" placeholder="Product Details" value= "${ pdescription }"></textarea>
+						<textarea class="form-control border border-success" rows="4" name="description" placeholder="Product Details" value= "${product.description }"></textarea>
 					</div>
 					<p>Product Image</p>
 					<div class="custom-file">
@@ -114,7 +113,6 @@
 			</div>
 		</form>
 	</div>
-	</c:forEach>
 
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
 		integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

@@ -33,5 +33,7 @@ public class productService {
 		return this.productDao.deletProduct(id);
 	}
 
-	
+	public boolean productByNameExists(String name) {
+		return this.productDao.productByNameExists(name);
+	}
 }

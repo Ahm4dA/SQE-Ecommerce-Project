@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,4 +54,21 @@ public class productDao {
 		return false;
 	}
 
+	@Transactional
+	public boolean productByNameExists(String name) {
+		Query query = sessionFactory.getCurrentSession().createQuery("from PRODUCT where name = :name");
+		query.setParameter("name", name);
+
+		Product product = null;
+
+		try {
+			product = (Product) query.getSingleResult();
+		} catch (Exception e) {
+		}
+
+		if(product != null) {
+			return true;
+		}
+		return false;
+	}
 }

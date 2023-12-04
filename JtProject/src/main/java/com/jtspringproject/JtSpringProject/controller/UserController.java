@@ -1,32 +1,21 @@
 package com.jtspringproject.JtSpringProject.controller;
 
-import com.jtspringproject.JtSpringProject.models.Cart;
+import com.jtspringproject.JtSpringProject.dao.categoryDao;
+import com.jtspringproject.JtSpringProject.models.Category;
 import com.jtspringproject.JtSpringProject.models.Product;
 import com.jtspringproject.JtSpringProject.models.User;
-
-import java.io.Console;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-
-import com.jtspringproject.JtSpringProject.services.cartService;
+import com.jtspringproject.JtSpringProject.services.productService;
+import com.jtspringproject.JtSpringProject.services.userService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jtspringproject.JtSpringProject.services.userService;
-import com.jtspringproject.JtSpringProject.services.productService;
-import com.jtspringproject.JtSpringProject.services.cartService;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class UserController {
@@ -38,6 +27,8 @@ public class UserController {
 
 	@Autowired
 	private productService productService;
+	@Autowired
+	private categoryDao categoryService;
 
 	@GetMapping("/register")
 	public String registerUser() {
@@ -76,6 +67,7 @@ public class UserController {
 				}
 				return mView;
 			} else {
+				this.loggedInUser = u;
 				ModelAndView mv = new ModelAndView("adminHome");
 				mv.addObject("admin", u);
 				return mv;
@@ -218,6 +210,86 @@ public class UserController {
 	public String returnIndex() {
 		this.loggedInUser = null;
 		return "redirect:/";
+	}
+
+	//--------------Admin Part--------------------
+
+	@GetMapping("admin/products")
+	public ModelAndView getProduct() {
+
+		ModelAndView mView;
+
+		if(loggedInUser != null){
+			if (!loggedInUser.getRole().equals("ROLE_ADMIN")) {
+				mView = new ModelAndView("adminlogin");
+			}
+			else{
+				mView = new ModelAndView("products");
+
+				List<Product> products = this.productService.getProducts();
+
+				if (products.isEmpty()) {
+					mView.addObject("msg", "No products are available");
+				} else {
+					mView.addObject("products", products);
+				}
+			}
+		}
+		else {
+			mView = new ModelAndView("userLogin");
+		}
+		return mView;
+
+	}
+	@GetMapping("admin/products/add")
+	public ModelAndView addProduct() {
+		ModelAndView mView = new ModelAndView("productsAdd");
+		List<Category> categories = this.categoryService.getCategories();
+		mView.addObject("categories",categories);
+		return mView;
+	}
+
+	@RequestMapping(value = "admin/products/add",method=RequestMethod.POST)
+	public String addProduct(@RequestParam("name") String name,@RequestParam("categoryid") int categoryId ,@RequestParam("price") int price,@RequestParam("weight") int weight, @RequestParam("quantity")int quantity,@RequestParam("description") String description,@RequestParam("productImage") String productImage) {
+
+		if(this.productService.productByNameExists(name)){
+			return "redirect:/admin/products";
+		}
+
+		System.out.println(categoryId);
+		Category category = this.categoryService.getCategory(categoryId);
+		Product product = new Product();
+		product.setId(categoryId);
+		product.setName(name);
+		product.setCategory(category);
+		product.setDescription(description);
+		product.setPrice(price);
+		product.setImage(productImage);
+		product.setWeight(weight);
+		product.setQuantity(quantity);
+		this.productService.addProduct(product);
+		return "redirect:/admin/products";
+	}
+
+	@GetMapping("admin/products/update/{id}")
+	public ModelAndView updateproduct(@PathVariable("id") int id) {
+
+		ModelAndView mView = new ModelAndView("productsUpdate");
+		Product product = this.productService.getProduct(id);
+		System.out.println(product.getId());
+		List<Category> categories = this.categoryService.getCategories();
+
+		mView.addObject("categories",categories);
+		mView.addObject("product", product);
+		return mView;
+	}
+
+	@RequestMapping(value = "products/update/{id}",method=RequestMethod.POST)
+	public String updateProduct(@PathVariable("id") int id ,@RequestParam("name") String name,@RequestParam("categoryid") int categoryId ,@RequestParam("price") int price,@RequestParam("weight") int weight, @RequestParam("quantity")int quantity,@RequestParam("description") String description,@RequestParam("productImage") String productImage)
+	{
+
+//		this.productService.updateProduct();
+		return "redirect:/admin/products";
 	}
 
 	// @GetMapping("carts")
