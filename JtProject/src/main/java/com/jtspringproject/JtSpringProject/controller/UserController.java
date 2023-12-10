@@ -46,15 +46,23 @@ public class UserController {
 		return "userLogin";
 	}
 
+	public User getLoggedInUser(){
+		return this.loggedInUser;
+	}
+
+	public void setLoggedInUser(User u){
+		this.loggedInUser = u;
+	}
+
+
 	@RequestMapping(value = "userloginvalidate", method = RequestMethod.POST)
 	public ModelAndView userlogin(@RequestParam("username") String username, @RequestParam("password") String pass,
-								  Model model, HttpServletResponse res) {
+								  Model model) {
 
 		User u = this.userService.checkLogin(username, pass);
 
 		if (u != null) {
 			if (u.getRole().contains("ROLE_NORMAL")) {
-				res.addCookie(new Cookie("username", u.getUsername()));
 				this.loggedInUser = u;
 				ModelAndView mView = new ModelAndView("index");
 				mView.addObject("user", u);
@@ -124,40 +132,6 @@ public class UserController {
 			ModelAndView mView = new ModelAndView("redirect:/");
 			return mView;
 		}
-	}
-
-	// for Learning purpose of model
-	@GetMapping("/test")
-	public String Test(Model model) {
-		System.out.println("test page");
-		model.addAttribute("author", "jay gajera");
-		model.addAttribute("id", 40);
-
-		List<String> friends = new ArrayList<String>();
-		model.addAttribute("f", friends);
-		friends.add("xyz");
-		friends.add("abc");
-
-		return "test";
-	}
-
-	// for learning purpose of model and view ( how data is pass to view)
-
-	@GetMapping("/test2")
-	public ModelAndView Test2() {
-		System.out.println("test page");
-		// create modelandview object
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("name", "jay gajera 17");
-		mv.addObject("id", 40);
-		mv.setViewName("test2");
-
-		List<Integer> list = new ArrayList<Integer>();
-		list.add(10);
-		list.add(25);
-		mv.addObject("marks", list);
-		return mv;
-
 	}
 
 	@GetMapping("profileDisplay")
