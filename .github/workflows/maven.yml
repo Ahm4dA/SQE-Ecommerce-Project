@@ -29,7 +29,6 @@ jobs:
     # Run the MySQL script
     - name: Run MySQL script
       run: |
-        sleep 10;
         mysql -h 127.0.0.1 -u root -psql123 ecommjava < JtProject/basedata.sql
 
     - name: Set up JDK 11
