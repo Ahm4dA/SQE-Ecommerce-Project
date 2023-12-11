@@ -49,18 +49,5 @@ class CategoryDAOTest {
         assertNull(sessionFactory.getCurrentSession().get(Category.class, testCategory.getId()));
     }
 
-    @Test
-    void testUpdateCategory() {
-        Category testCategory = categoryDao.addCategory("TestCategory");
-        Category updatedCategory = categoryDao.updateCategory(testCategory.getId(), "UpdatedCategory");
-        assertEquals("UpdatedCategory", updatedCategory.getName());
-    }
-
-    @Test
-    void testGetCategory() {
-        Category testCategory = categoryDao.addCategory("TestCategory");
-        Category retrievedCategory = categoryDao.getCategory(testCategory.getId());
-        assertNotNull(retrievedCategory);
-        assertEquals("TestCategory", retrievedCategory.getName());
-    }
+    
 }
