@@ -17,7 +17,7 @@ import com.jtspringproject.JtSpringProject.models.Category;
 @SpringBootTest
 @Transactional
 @Rollback(true)
-class CategoryDaoTest {
+class CategoryDAOTest {
 
     @Autowired
     private categoryDao categoryDao;

@@ -18,7 +18,7 @@ import com.jtspringproject.JtSpringProject.models.Product;
 @SpringBootTest
 @Transactional
 @Rollback(true)
-class ProductDaoTest {
+class ProductDAOTest {
 
     @Autowired
     private productDao productDao;
