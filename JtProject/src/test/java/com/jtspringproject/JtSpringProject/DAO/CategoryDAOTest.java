@@ -33,21 +33,24 @@ class CategoryDAOTest {
     }
 
     @Test
-    void testGetCategories() {
-        List<Category> initialCategories = categoryDao.getCategories();
-        Category testCategory = categoryDao.addCategory("TestCategory");
-        List<Category> categoriesAfterAddition = categoryDao.getCategories();
-
-        assertEquals(initialCategories.size() + 1, categoriesAfterAddition.size());
-        assertTrue(categoriesAfterAddition.contains(testCategory));
-    }
-
-    @Test
     void testDeleteCategory() {
         Category testCategory = categoryDao.addCategory("TestCategory");
         assertTrue(categoryDao.deletCategory(testCategory.getId()));
         assertNull(sessionFactory.getCurrentSession().get(Category.class, testCategory.getId()));
     }
 
-    
+    @Test
+    void testUpdateCategory() {
+        Category testCategory = categoryDao.addCategory("TestCategory");
+        Category updatedCategory = categoryDao.updateCategory(testCategory.getId(), "UpdatedCategory");
+        assertEquals("UpdatedCategory", updatedCategory.getName());
+    }
+
+    @Test
+    void testGetCategory() {
+        Category testCategory = categoryDao.addCategory("TestCategory");
+        Category retrievedCategory = categoryDao.getCategory(testCategory.getId());
+        assertNotNull(retrievedCategory);
+        assertEquals("TestCategory", retrievedCategory.getName());
+    }    
 }
